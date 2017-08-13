@@ -36,7 +36,7 @@
 #include <cstdint>
 #include <cstdio>
 #include <cmath>
-#include <cfloat>
+#include <limits>
 #include <vector>
 #include <algorithm>
 
@@ -598,6 +598,8 @@ void EXIFInfo::parseIFDGPS(EntryParser& parser) {
 // parseFromEXIFSegment() or parseFromXMPSegment()
 //
 int EXIFInfo::parseFrom(const uint8_t* buf, unsigned len) {
+	 clear(); //init all parameters
+
 	// Sanity check: all JPEG files start with 0xFFD8 and end with 0xFFD9
 	// This check also ensures that the user has supplied a correct value for len.
 	if (!buf || len < 16)
@@ -878,7 +880,7 @@ int EXIFInfo::parseFromXMPSegment(const uint8_t* buf, unsigned len) {
 
 void EXIFInfo::Geolocation_t::parseCoords() {
 	// convert GPS latitude
-	if (LatComponents.degrees != DBL_MAX ||
+	if (LatComponents.degrees != std::numeric_limits<double>::max() ||
 		LatComponents.minutes != 0 ||
 		LatComponents.seconds != 0) {
 		Latitude =
@@ -889,7 +891,7 @@ void EXIFInfo::Geolocation_t::parseCoords() {
 			Latitude = -Latitude;
 	}
 	// convert GPS longitude
-	if (LonComponents.degrees != DBL_MAX ||
+	if (LonComponents.degrees != std::numeric_limits<double>::max() ||
 		LonComponents.minutes != 0 ||
 		LonComponents.seconds != 0) {
 		Longitude =
@@ -907,16 +909,16 @@ void EXIFInfo::Geolocation_t::parseCoords() {
 }
 
 bool EXIFInfo::Geolocation_t::hasLatLon() const {
-	return Latitude != DBL_MAX && Longitude != DBL_MAX;
+	return Latitude != std::numeric_limits<double>::max() && Longitude != std::numeric_limits<double>::max();
 }
 bool EXIFInfo::Geolocation_t::hasAltitude() const {
-	return Altitude != DBL_MAX;
+	return Altitude != std::numeric_limits<double>::max();
 }
 bool EXIFInfo::Geolocation_t::hasRelativeAltitude() const {
-	return RelativeAltitude != DBL_MAX;
+	return RelativeAltitude != std::numeric_limits<double>::max();
 }
 bool EXIFInfo::Geolocation_t::hasOrientation() const {
-	return RollDegree != DBL_MAX && PitchDegree != DBL_MAX && YawDegree != DBL_MAX;
+	return RollDegree != std::numeric_limits<double>::max() && PitchDegree != std::numeric_limits<double>::max() && YawDegree != std::numeric_limits<double>::max();
 }
 
 
@@ -969,24 +971,24 @@ void EXIFInfo::clear() {
 	LensInfo.Model = "";
 
 	// Geolocation
-	GeoLocation.Latitude                = DBL_MAX;
-	GeoLocation.Longitude               = DBL_MAX;
-	GeoLocation.Altitude                = DBL_MAX;
+	GeoLocation.Latitude                = std::numeric_limits<double>::max();
+	GeoLocation.Longitude               = std::numeric_limits<double>::max();
+	GeoLocation.Altitude                = std::numeric_limits<double>::max();
 	GeoLocation.AltitudeRef             = 0;
-	GeoLocation.RelativeAltitude        = DBL_MAX;
-	GeoLocation.RollDegree              = DBL_MAX;
-	GeoLocation.PitchDegree             = DBL_MAX;
-	GeoLocation.YawDegree               = DBL_MAX;
+	GeoLocation.RelativeAltitude        = std::numeric_limits<double>::max();
+	GeoLocation.RollDegree              = std::numeric_limits<double>::max();
+	GeoLocation.PitchDegree             = std::numeric_limits<double>::max();
+	GeoLocation.YawDegree               = std::numeric_limits<double>::max();
 	GeoLocation.GPSDOP                  = 0;
 	GeoLocation.GPSDifferential         = 0;
 	GeoLocation.GPSMapDatum             = "";
 	GeoLocation.GPSTimeStamp            = "";
 	GeoLocation.GPSDateStamp            = "";
-	GeoLocation.LatComponents.degrees   = DBL_MAX;
+	GeoLocation.LatComponents.degrees   = std::numeric_limits<double>::max();
 	GeoLocation.LatComponents.minutes   = 0;
 	GeoLocation.LatComponents.seconds   = 0;
 	GeoLocation.LatComponents.direction = 0;
-	GeoLocation.LonComponents.degrees   = DBL_MAX;
+	GeoLocation.LonComponents.degrees   = std::numeric_limits<double>::max();
 	GeoLocation.LonComponents.minutes   = 0;
 	GeoLocation.LonComponents.seconds   = 0;
 	GeoLocation.LonComponents.direction = 0;
