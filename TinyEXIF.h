@@ -73,7 +73,7 @@ class EntryParser;
 //
 class TINYEXIF_LIB EXIFInfo {
 public:
-	EXIFInfo() { clear(); }
+	EXIFInfo() { }
 
 	// Parsing function for an entire JPEG image buffer.
 	//
