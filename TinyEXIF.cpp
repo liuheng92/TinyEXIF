@@ -854,17 +854,25 @@ int EXIFInfo::parseFromXMPSegment(const uint8_t* buf, unsigned len) {
 
 	// Now try parsing the XMP content for projection type.
 	{
-	const tinyxml2::XMLElement* const element(document->FirstChildElement("GPano:ProjectionType"));
-	if (element != NULL) {
-		const char* const szProjectionType(element->GetText());
-		if (szProjectionType != NULL) {
-			if (0 == _tcsicmp(szProjectionType, "perspective"))
-				ProjectionType = 1;
-			else if (0 == _tcsicmp(szProjectionType, "equirectangular") ||
-					 0 == _tcsicmp(szProjectionType, "spherical"))
-				ProjectionType = 2;
-		}
-	}
+        const tinyxml2::XMLElement* const element(document->FirstChildElement("GPano:ProjectionType"));
+        const char* GPano_ProjectionType = NULL;
+        if (NULL == element){
+            const tinyxml2::XMLAttribute* attri_GPano_ProjectionType = document->FindAttribute("GPano:ProjectionType");
+            if(NULL != attri_GPano_ProjectionType)
+            {
+                GPano_ProjectionType = attri_GPano_ProjectionType->Value();
+            }
+        }
+        else{
+            GPano_ProjectionType = element->GetText();
+        }
+        
+        if (NULL != GPano_ProjectionType){
+            if (0 == _tcsicmp(GPano_ProjectionType, "perspective"))
+            ProjectionType = 1;
+            else if (0 == _tcsicmp(GPano_ProjectionType, "equirectangular") || 0 == _tcsicmp(GPano_ProjectionType, "spherical"))
+            ProjectionType = 2;
+        }
 	}
 
 	// Now try parsing the XMP content for DJI info.
